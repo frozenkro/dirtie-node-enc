@@ -5,7 +5,7 @@ pico_length = 51;
 pico_width = 21;
 pico_thickness = 1;
 pico_hole_offset_chg = 2;
-pico_hole_offset_w = 4.5;
+pico_hole_offset_w = 4.7;
 pico_hole_diameter = 2.1;
 
 // Adafruit sensor dimensions
@@ -18,7 +18,7 @@ ada_length_full = 76.2;
 ada_length = 101.6;
 ada_height = 1.6;
 ada_width = 14.3;
-ada_vert_clearance = 2;
+ada_vert_clearance = 1.5;
 
 // Module for mounting post with optional support
 module mounting_post_assembly(height, diameter, with_support = true, support_height = 0.5) {
@@ -52,12 +52,12 @@ module corner_riser(width, height) {
 module pico_sensor_enclosure(
     // Enclosure parameters
     wall_thickness = 2,
-    base_thickness = 5,
-    enclosure_height = 5,
+    base_thickness = 4,
+    enclosure_height = 7.5,
     clearance = 0.25,
     
     // Post parameters
-    post_diameter = 1.8,
+    post_diameter = 1.6,
     post_height = 2,
     
     // Pico positioning
@@ -97,7 +97,7 @@ module pico_sensor_enclosure(
                       enclosure_height + 1]);
             
             // USB cable opening
-            translate([-1, enclosure_width/2 - 6, base_thickness])
+            translate([-1, enclosure_width/2 - 6, base_thickness + pico_base_clearance])
                 cube([wall_thickness + 2, 12, 6]);
             
             // Sensor back end opening
@@ -133,7 +133,7 @@ module pico_sensor_enclosure(
         translate([ada_cavity_x + ada_hole_offset_l_chg,
                    ada_cavity_y + ada_width/2 + clearance - ada_width/2 + ada_hole_offset_w,
                    ada_cavity_z])
-            mounting_post_assembly(post_height, ada_hole_diameter - 0.2);
+            mounting_post_assembly(post_height, ada_hole_diameter - 0.5);
         
         // Right sensor post
         translate([ada_cavity_x + ada_hole_offset_l_chg,
