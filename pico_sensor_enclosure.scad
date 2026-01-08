@@ -8,6 +8,9 @@ pico_hole_offset_chg = 2;
 pico_hole_offset_w = 4.7;
 pico_hole_diameter = 2.1;
 
+pico_cavity_height = 7.5;
+pico_cavity_base = 4;
+
 // Adafruit sensor dimensions
 ada_hole_diameter = 3.1;
 ada_hole_offset_w = 2.8;
@@ -52,8 +55,6 @@ module corner_riser(width, height) {
 module pico_sensor_enclosure(
     // Enclosure parameters
     wall_thickness = 2,
-    base_thickness = 4,
-    enclosure_height = 7.5,
     clearance = 0.25,
     
     // Post parameters
@@ -72,17 +73,17 @@ module pico_sensor_enclosure(
     // Calculate derived dimensions
     enclosure_length = pico_length + ada_hole_offset_l_sens + (2 * clearance) + (2 * wall_thickness);
     enclosure_width = pico_width + (2 * clearance) + (2 * wall_thickness);
-    enclosure_total_height = base_thickness + enclosure_height;
+    enclosure_total_height = pico_cavity_base + pico_cavity_height;
     ada_cavity_depth = ada_height + ada_vert_clearance;
     
     // Calculate relative positions (from enclosure origin)
     pico_x = wall_thickness + clearance;
     pico_y = wall_thickness + clearance;
-    pico_z = base_thickness + pico_base_clearance;
+    pico_z = pico_cavity_base + pico_base_clearance;
     
     ada_cavity_x = enclosure_length - ada_length_enclosed + clearance;
     ada_cavity_y = enclosure_width/2 - ada_width/2 - clearance;
-    ada_cavity_z = base_thickness - ada_cavity_depth;
+    ada_cavity_z = pico_cavity_base - ada_cavity_depth;
     
     union() {
         // Main enclosure box
@@ -91,22 +92,22 @@ module pico_sensor_enclosure(
             cube([enclosure_length, enclosure_width, enclosure_total_height]);
             
             // Main inner cavity for Pico
-            translate([wall_thickness, wall_thickness, base_thickness])
+            translate([wall_thickness, wall_thickness, pico_cavity_base])
                 cube([pico_length + (2 * clearance), 
                       pico_width + (2 * clearance), 
-                      enclosure_height + 1]);
+                      pico_cavity_height + 1]);
             
             // USB cable opening
-            translate([-1, enclosure_width/2 - 6, base_thickness + pico_base_clearance])
+            translate([-1, enclosure_width/2 - 6, pico_cavity_base + pico_base_clearance])
                 cube([wall_thickness + 2, 12, 6]);
             
             // Sensor back end opening
             translate([pico_length + wall_thickness, 
                        enclosure_width/2 - ada_width/2 - clearance, 
-                       base_thickness])
+                       pico_cavity_base])
                 cube([wall_thickness + ada_hole_offset_l_sens + wall_thickness, 
                       ada_width + clearance*2, 
-                      enclosure_height + 1]);
+                      pico_cavity_height + 1]);
             
             // Sensor cavity
             translate([ada_cavity_x, ada_cavity_y, ada_cavity_z])
@@ -119,13 +120,13 @@ module pico_sensor_enclosure(
         // Left post
         translate([pico_x + pico_hole_offset_chg, 
                    pico_y + pico_hole_offset_w, 
-                   base_thickness])
+                   pico_cavity_base])
             post_with_riser(post_height, post_diameter, pico_base_clearance);
         
         // Right post
         translate([pico_x + pico_hole_offset_chg, 
                    pico_y + pico_width - pico_hole_offset_w, 
-                   base_thickness])
+                   pico_cavity_base])
             post_with_riser(post_height, post_diameter, pico_base_clearance);
         
         // Sensor mounting posts (relative to sensor cavity)
@@ -142,22 +143,22 @@ module pico_sensor_enclosure(
             mounting_post_assembly(post_height, ada_hole_diameter - 0.2);
         
         // Corner risers for Pico (relative to pico area)
-        translate([pico_x - clearance, pico_y - clearance, base_thickness])
+        translate([pico_x - clearance, pico_y - clearance, pico_cavity_base])
             corner_riser(corner_riser_width, pico_base_clearance);
         
         translate([pico_x - clearance, 
                    pico_y + pico_width - corner_riser_width + clearance, 
-                   base_thickness])
+                   pico_cavity_base])
             corner_riser(corner_riser_width, pico_base_clearance);
         
         translate([pico_x + pico_length - corner_riser_width + clearance, 
                    pico_y - clearance, 
-                   base_thickness])
+                   pico_cavity_base])
             corner_riser(corner_riser_width, pico_base_clearance);
         
         translate([pico_x + pico_length - corner_riser_width + clearance, 
                    pico_y + pico_width - corner_riser_width + clearance, 
-                   base_thickness])
+                   pico_cavity_base])
             corner_riser(corner_riser_width, pico_base_clearance);
     }
     
@@ -180,16 +181,13 @@ function pico_sensor_enclosure_dims(
 ) = [
     pico_length + ada_hole_offset_l_sens + (2 * clearance) + (2 * wall_thickness),
     pico_width + (2 * clearance) + (2 * wall_thickness),
-    5 + 5  // base_thickness + enclosure_height
+    5 + 5  // pico_cavity_base + pico_cavity_height
 ];
 
-// Example usage - easy to position multiple enclosures
+// Example
 pico_sensor_enclosure(show_components = true);
 
 // Example: Place another one next to it
 // translate([65, 0, 0])
 //     pico_sensor_enclosure(show_components = false);
 
-// Example: Use in a larger enclosure
-// translate([10, 10, 3])
-//     pico_sensor_enclosure(base_thickness = 0);  // No base if sitting on another surface
