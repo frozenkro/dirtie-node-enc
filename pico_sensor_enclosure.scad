@@ -40,6 +40,10 @@ module pico_sensor_enclosure(
     
     // Features
     corner_riser_width = 2,
+
+    // Screw Insert Spec
+    screw_insert_diameter = 4.5,
+    screw_insert_depth = 4,
     
     // Debug
     show_components = false
@@ -59,6 +63,9 @@ module pico_sensor_enclosure(
     ada_cavity_x = enc_dims[0] - ada_length_enclosed + clearance;
     ada_cavity_y = enc_dims[1]/2 - ada_width/2 - clearance;
     ada_cavity_z = pico_cavity_z - ada_cavity_depth;
+
+    screw_insert_bezel = 3.5;
+    screw_insert_tab_width = screw_insert_diameter + screw_insert_bezel;
 
     union() {
         // Main enclosure box
@@ -109,7 +116,7 @@ module pico_sensor_enclosure(
         translate([ada_cavity_x + ada_hole_offset_l_chg,
                    ada_cavity_y + ada_width/2 + clearance - ada_width/2 + ada_hole_offset_w,
                    ada_cavity_z])
-            mounting_post_assembly(post_height, ada_hole_diameter - 0.5);
+            mounting_post_assembly(post_height, ada_hole_diameter - 1);
         
         // Right sensor post
         translate([ada_cavity_x + ada_hole_offset_l_chg,
@@ -135,6 +142,21 @@ module pico_sensor_enclosure(
                    pico_y + pico_width - corner_riser_width + clearance, 
                    pico_cavity_z])
             corner_riser(corner_riser_width, pico_base_clearance);
+
+        // Screw insert tabs
+        rotate(180)
+        translate([-(screw_insert_tab_width/2 + wall_thickness), screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+        rotate(180)
+        translate([-enc_dims[0] + wall_thickness + screw_insert_tab_width/2, screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+        translate([screw_insert_tab_width/2 + wall_thickness, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+        translate([enc_dims[0] - screw_insert_tab_width/2 - wall_thickness, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
     }
     
     // Debug: Show component outlines
