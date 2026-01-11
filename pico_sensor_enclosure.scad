@@ -77,6 +77,13 @@ module pico_sensor_enclosure(
                 cube([ada_length_enclosed + 1, 
                       ada_width + clearance*2, 
                       ada_cavity_depth + clearance]);
+
+            // wiring hole
+            translate([ps_wiring_hole_x,
+                       enc_dims[1]/2 - ps_wiring_hole_width/2,
+                       -boop])
+                cube([ps_wiring_hole_length, ps_wiring_hole_width,
+                      pico_cavity_z + (2*boop)]);
         }
         
         // Pico mounting posts (relative to pico position)
@@ -161,8 +168,8 @@ pico_sensor_enclosure(show_components = true);
 
 def_dims = pico_sensor_enclosure_dims(def_wall_thickness, def_clearance, def_base_thickness);
 //translate([def_dims[0]/2, - def_dims[1] - 10, 0])
-translate([def_dims[0]/2, def_dims[1]/2, def_dims[2]])
-pico_sensor_lid();
+//translate([def_dims[0]/2, def_dims[1]/2, def_dims[2]])
+//pico_sensor_lid();
 // Example: Place another one next to it
 // translate([65, 0, 0])
 //     pico_sensor_enclosure(show_components = false);

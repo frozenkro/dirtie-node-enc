@@ -20,18 +20,26 @@ ada_height = 1.5;
 ada_width = 14.3;
 ada_vert_clearance = 1.5;
 
+// Wiring hole
+ps_wiring_hole_width = 10;
+ps_wiring_hole_length = 10;
+ps_wiring_hole_x = 10;
+
 // default args
 def_wall_thickness = 2;
 def_clearance = 0.25;
 def_base_thickness = 1;
 def_pico_post_diameter = 1.6;
 
+//boop
+boop = 0.01;
+
 
 // Function to get enclosure dimensions (useful for positioning in larger assembly)
 function pico_sensor_enclosure_dims(
     wall_thickness = def_wall_thickness,
     clearance = def_clearance,
-    base_thickness = deb_base_thickness
+    base_thickness = def_base_thickness
 ) = [
     pico_length + ada_hole_offset_l_sens + (2 * clearance) + (2 * wall_thickness),
     pico_width + (2 * clearance) + (2 * wall_thickness),
@@ -55,3 +63,5 @@ function pico_location(
   wall_thickness + clearance,
   get_pico_z(base_thickness)
 ];
+
+
