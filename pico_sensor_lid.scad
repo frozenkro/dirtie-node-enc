@@ -16,8 +16,6 @@ module pico_sensor_lid(
   screw_tab_height = 3,
   screw_tab_edge_offset = 2,
 
-  wall_thickness = 2,
-
   // Screw Specs
   screw_threading_diameter = 2.1,
   screw_head_width = 5.2,

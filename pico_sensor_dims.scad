@@ -21,7 +21,7 @@ ada_width = 14.3;
 ada_vert_clearance = 1.5;
 
 // default args
-def_wall_thickness = 2.1;
+def_wall_thickness = 2;
 def_clearance = 0.25;
 def_base_thickness = 1;
 def_pico_post_diameter = 1.6;
