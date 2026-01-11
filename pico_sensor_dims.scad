@@ -35,7 +35,7 @@ def_pico_post_diameter = 1.6;
 boop = 0.01;
 
 
-// Function to get enclosure dimensions (useful for positioning in larger assembly)
+// Function to get enclosure dimensions
 function pico_sensor_enclosure_dims(
     wall_thickness = def_wall_thickness,
     clearance = def_clearance,

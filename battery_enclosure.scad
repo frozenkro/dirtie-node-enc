@@ -1,41 +1,31 @@
 // PKCELL LP503562 3.7V 1200mAh battery + Lipo Amigo Charging Module
 
 use <support.scad>
+use <battery_lid.scad>
+include <battery_dims.scad>
 
-boop = 0.01;
 post_height = 2;
 
-// Dimensions 
-bat_height = 4.76;
-bat_width = 34.44;
-bat_length = 60.66;
-bat_width_wires = 38; // width of the battery with some clearance for the wires on the side
-
-chg_height_bat = 6.84;
-chg_height_usb = 4.57;
-chg_height_board = 1.22;
-chg_width = 25;
-chg_length = 21.04;
-
-chg_hole_offset = 2.5;
-chg_hole_diameter = 2.2;
-
-usb_opening_length = 12;
-
-pico_enc_dims = pico_sensor_enclosure_dims();
-
 module battery_enclosure(
-  wall_thickness = 2,
-  base_thickness = 2,
-  clearance = 0.5,
+  wall_thickness = def_wall_thickness,
+  base_thickness = def_base_thickness,
+  clearance = def_clearance,
+
+  // Screw Insert Spec
+  screw_insert_diameter = 4.5,
+  screw_insert_depth = 4,
+  screw_tab_edge_offset = 2,
 ) {
   
-  enc_dims = battery_enc_dims(wall_thickness, base_thickness, clearance);
+  enc_dims = battery_enclosure_dims(wall_thickness, base_thickness, clearance);
   chg_chasm_depth = chg_height_bat + 1;
+  
+  screw_insert_bezel = 3.5;
+  screw_insert_tab_width = screw_insert_diameter + screw_insert_bezel;
 
-  bat_z = base_thickness + chg_chasm_depth;
+  bat_z = get_battery_z(base_thickness);
 
-  inner_width = bat_width_wires + (2*clearance);
+  inner_width = get_inner_width(clearance);
 
   union() {
 
@@ -91,21 +81,33 @@ module battery_enclosure(
       wall_thickness + clearance + chg_length - chg_hole_offset,
       enc_dims[1] - wall_thickness - clearance - chg_width + chg_hole_offset,
       base_thickness + .4])
-    mounting_post_assembly(post_height, chg_hole_diameter - 0.4, with_support = true);
+     mounting_post_assembly(post_height, chg_hole_diameter - 0.4, with_support = true);
+
+    // screw insert tabs
+    rotate(180)
+    translate([-(screw_insert_tab_width/2 + screw_tab_edge_offset), screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+    screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+    rotate(180)
+    translate([-enc_dims[0] + screw_tab_edge_offset + screw_insert_tab_width/2, screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+    screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+    translate([screw_insert_tab_width/2 + screw_tab_edge_offset, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+    screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+    translate([enc_dims[0] - screw_insert_tab_width/2 - screw_tab_edge_offset, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+    screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
 
   }
 
 }
 
-function battery_enc_dims(
-  wall_thickness = 2,
-  base_thickness = 2,
-  clearance = 0.5
-) = [
-  bat_length + (2*clearance) + (2*wall_thickness),
-  bat_width_wires + (2*clearance) + (2*wall_thickness),
-  base_thickness + bat_height + chg_height_bat + 2
-];
 
 // Example
 battery_enclosure();
+
+/*
+enc_dims = battery_enclosure_dims();
+translate([enc_dims[0]/2, enc_dims[1]/2, enc_dims[2]])
+battery_lid();
+*/
