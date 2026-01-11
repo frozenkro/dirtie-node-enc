@@ -159,9 +159,9 @@ module pico_sensor_enclosure(
 // Example
 pico_sensor_enclosure(show_components = true);
 
-def_dims = pico_sensor_enclosure_dims();
+def_dims = pico_sensor_enclosure_dims(def_wall_thickness, def_clearance, def_base_thickness);
 //translate([def_dims[0]/2, - def_dims[1] - 10, 0])
-translate([def_dims[0]/2 - 0.25, def_dims[1]/2 - 0.25, def_dims[2]])
+translate([def_dims[0]/2, def_dims[1]/2, def_dims[2]])
 pico_sensor_lid();
 // Example: Place another one next to it
 // translate([65, 0, 0])

@@ -29,9 +29,9 @@ def_pico_post_diameter = 1.6;
 
 // Function to get enclosure dimensions (useful for positioning in larger assembly)
 function pico_sensor_enclosure_dims(
-    wall_thickness = 2,
-    clearance = 0.5,
-    base_thickness = 1
+    wall_thickness = def_wall_thickness,
+    clearance = def_clearance,
+    base_thickness = deb_base_thickness
 ) = [
     pico_length + ada_hole_offset_l_sens + (2 * clearance) + (2 * wall_thickness),
     pico_width + (2 * clearance) + (2 * wall_thickness),
