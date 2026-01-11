@@ -42,4 +42,37 @@ module screw_insert_tab(insert_diameter, tab_width, tab_height) {
   }
 }
 
+module screw_tab(tab_width, 
+  tab_height, 
+  screw_diameter, 
+  screw_head_height, 
+  screw_head_width) {
+
+  translate([-(tab_width/2), -(tab_width/2), 0])
+  difference() {
+    union() {
+      cube([tab_width, tab_width/2, tab_height]);
+
+      translate([tab_width/2, tab_width/2, 0])
+        cylinder(h = tab_height, d = tab_width, $fn = 32);
+    }
+
+    translate([tab_width/2, 
+      tab_width/2, 
+      -0.01])
+      cylinder(h = tab_height + 0.02, 
+        d = screw_diameter, 
+        $fn = 32);
+    
+    translate([tab_width/2, 
+      tab_width/2, 
+      tab_height - screw_head_height])
+      cylinder(h = screw_head_height + 0.01,
+        d1 = screw_diameter,
+        d2 = screw_head_width,
+        $fn = 32);
+        
+  }
+}
+
 screw_insert_tab(4.5, 8, 5);

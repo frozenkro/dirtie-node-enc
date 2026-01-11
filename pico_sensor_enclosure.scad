@@ -1,6 +1,7 @@
 // Pico W + Sensor Enclosure Module
 
 use <support.scad>
+use <pico_sensor_lid.scad>
 
 // Component dimensions
 pico_length = 51;
@@ -44,6 +45,7 @@ module pico_sensor_enclosure(
     // Screw Insert Spec
     screw_insert_diameter = 4.5,
     screw_insert_depth = 4,
+    screw_tab_edge_offset = 2,
     
     // Debug
     show_components = false
@@ -145,17 +147,17 @@ module pico_sensor_enclosure(
 
         // Screw insert tabs
         rotate(180)
-        translate([-(screw_insert_tab_width/2 + wall_thickness), screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        translate([-(screw_insert_tab_width/2 + screw_tab_edge_offset), screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
         screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
 
         rotate(180)
-        translate([-enc_dims[0] + wall_thickness + screw_insert_tab_width/2, screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        translate([-enc_dims[0] + screw_tab_edge_offset + screw_insert_tab_width/2, screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
         screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
 
-        translate([screw_insert_tab_width/2 + wall_thickness, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        translate([screw_insert_tab_width/2 + screw_tab_edge_offset, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
         screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
 
-        translate([enc_dims[0] - screw_insert_tab_width/2 - wall_thickness, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
+        translate([enc_dims[0] - screw_insert_tab_width/2 - screw_tab_edge_offset, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
         screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
     }
     
@@ -185,11 +187,26 @@ function pico_sensor_enclosure_dims(
 function f_pico_cavity_z(
   base_thickness = 1
 ) = base_thickness + ada_height + ada_vert_clearance;
+
+function sensor_tooth_height(
+    wall_thickness = 2,
+    clearance = 0.5,
+    base_thickness = 1
+) = pico_sensor_enclosure_dims(wall_thickness, clearance, base_thickness)[2] - base_thickness - ada_height - clearance;
+
+function sensor_tooth_width(
+    wall_thickness = 2,
+    clearance = 0.5,
+    base_thickness = 1
+) = pico_sensor_enclosure_dims(wall_thickness, clearance, base_thickness)[0] - pico_length - (wall_thickness*2) - clearance;
     
 
 // Example
 pico_sensor_enclosure(show_components = true);
 
+def_dims = pico_sensor_enclosure_dims();
+translate([def_dims[0]/2, - def_dims[1] - 10, 0])
+pico_sensor_lid(def_dims[0], def_dims[1], 8, 3, sensor_tooth_height(2, .25, 1), sensor_tooth_width(2, .25, 1));
 // Example: Place another one next to it
 // translate([65, 0, 0])
 //     pico_sensor_enclosure(show_components = false);
