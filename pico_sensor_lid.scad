@@ -27,7 +27,7 @@ module pico_sensor_lid(
   enclosure_width = enc_dims[1];
   enclosure_height = enc_dims[2];
 
-  sensor_tooth_height = get_sensor_tooth_height(enclosure_height, wall_thickness, clearance);
+  sensor_tooth_height = get_sensor_tooth_height(enclosure_height, base_thickness, clearance);
   sensor_tooth_length = get_sensor_tooth_length(enclosure_length, wall_thickness, clearance);
 
   pico_loc = pico_location(wall_thickness, clearance, base_thickness);
@@ -96,4 +96,4 @@ function get_sensor_tooth_length(
 function get_pico_post_socket_height(
     enclosure_height,
     base_thickness
-) = enclosure_height - (get_pico_z(base_thickness)) - 2;
+) = enclosure_height - (get_pico_z(base_thickness)) - pico_thickness - 0.1;
