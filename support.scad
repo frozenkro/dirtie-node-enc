@@ -22,6 +22,14 @@ module post_with_riser(post_height, post_diameter, riser_height, riser_diameter 
   }
 }
 
+module post_socket(height, post_diameter, thickness = 1, clearance = 0.4) {
+  difference() {
+    cylinder(h = height, d = post_diameter + thickness, $fn = 32);
+    translate([0, 0, -0.01])
+    cylinder(h = height, d = post_diameter + clearance, $fn = 32);
+  }
+}
+
 // Module for corner risers
 module corner_riser(width, height) {
   cube([width, width, height]);

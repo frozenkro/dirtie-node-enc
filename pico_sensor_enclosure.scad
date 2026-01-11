@@ -2,42 +2,20 @@
 
 use <support.scad>
 use <pico_sensor_lid.scad>
-
-// Component dimensions
-pico_length = 51;
-pico_width = 21;
-pico_thickness = 1;
-pico_hole_offset_chg = 2;
-pico_hole_offset_w = 4.7;
-pico_hole_diameter = 2.1;
-pico_cavity_height = 7.5;
-
-// Adafruit sensor dimensions
-ada_hole_diameter = 3.1;
-ada_hole_offset_w = 2.8;
-ada_hole_offset_l_chg = 23;
-ada_hole_offset_l_sens = 3.175;
-ada_length_enclosed = 30;
-ada_length_full = 76.2;
-ada_length = 101.6;
-ada_height = 1.5;
-ada_width = 14.3;
-ada_vert_clearance = 1.5;
+include <pico_sensor_dims.scad>
 
 
 // Main enclosure module - fully parameterized and relocatable
 module pico_sensor_enclosure(
     // Enclosure parameters
-    wall_thickness = 2,
-    clearance = 0.25,
-    base_thickness = 1,
+    wall_thickness = def_wall_thickness,
+    clearance = def_clearance,
+    base_thickness = def_base_thickness,
     
     // Post parameters
-    post_diameter = 1.6,
+    post_diameter = def_pico_post_diameter,
     post_height = 2,
     
-    // Pico positioning
-    pico_base_clearance = 2,
     
     // Features
     corner_riser_width = 2,
@@ -57,9 +35,10 @@ module pico_sensor_enclosure(
     enc_dims = pico_sensor_enclosure_dims(wall_thickness, clearance, base_thickness);
     
     // Calculate relative positions (from enclosure origin)
-    pico_x = wall_thickness + clearance;
-    pico_y = wall_thickness + clearance;
-    pico_z = pico_cavity_z + pico_base_clearance;
+    pico_loc = pico_location(wall_thickness, clearance, base_thickness);
+    pico_x = pico_loc[0];
+    pico_y = pico_loc[1];
+    pico_z = pico_loc[2];
     
     ada_cavity_depth = ada_height + ada_vert_clearance;
     ada_cavity_x = enc_dims[0] - ada_length_enclosed + clearance;
@@ -118,13 +97,13 @@ module pico_sensor_enclosure(
         translate([ada_cavity_x + ada_hole_offset_l_chg,
                    ada_cavity_y + ada_width/2 + clearance - ada_width/2 + ada_hole_offset_w,
                    ada_cavity_z])
-            mounting_post_assembly(post_height, ada_hole_diameter - 1);
+            mounting_post_assembly(post_height, ada_hole_diameter - 0.8);
         
         // Right sensor post
         translate([ada_cavity_x + ada_hole_offset_l_chg,
                    ada_cavity_y + ada_width/2 + clearance + ada_width/2 - ada_hole_offset_w,
                    ada_cavity_z])
-            mounting_post_assembly(post_height, ada_hole_diameter - 0.2);
+            mounting_post_assembly(post_height, ada_hole_diameter - 0.8);
         
         // Corner risers for Pico (relative to pico area)
         translate([pico_x - clearance, pico_y - clearance, pico_cavity_z])
@@ -173,40 +152,17 @@ module pico_sensor_enclosure(
     }
 }
 
-// Function to get enclosure dimensions (useful for positioning in larger assembly)
-function pico_sensor_enclosure_dims(
-    wall_thickness = 2,
-    clearance = 0.5,
-    base_thickness = 1
-) = [
-    pico_length + ada_hole_offset_l_sens + (2 * clearance) + (2 * wall_thickness),
-    pico_width + (2 * clearance) + (2 * wall_thickness),
-    f_pico_cavity_z(base_thickness) + pico_cavity_height
-];
 
-function f_pico_cavity_z(
-  base_thickness = 1
-) = base_thickness + ada_height + ada_vert_clearance;
 
-function sensor_tooth_height(
-    wall_thickness = 2,
-    clearance = 0.5,
-    base_thickness = 1
-) = pico_sensor_enclosure_dims(wall_thickness, clearance, base_thickness)[2] - base_thickness - ada_height - clearance;
-
-function sensor_tooth_width(
-    wall_thickness = 2,
-    clearance = 0.5,
-    base_thickness = 1
-) = pico_sensor_enclosure_dims(wall_thickness, clearance, base_thickness)[0] - pico_length - (wall_thickness*2) - clearance;
     
 
 // Example
 pico_sensor_enclosure(show_components = true);
 
 def_dims = pico_sensor_enclosure_dims();
-translate([def_dims[0]/2, - def_dims[1] - 10, 0])
-pico_sensor_lid(def_dims[0], def_dims[1], 8, 3, sensor_tooth_height(2, .25, 1), sensor_tooth_width(2, .25, 1));
+//translate([def_dims[0]/2, - def_dims[1] - 10, 0])
+translate([def_dims[0]/2 - 0.05, def_dims[1]/2 -0.05, def_dims[2]])
+pico_sensor_lid();
 // Example: Place another one next to it
 // translate([65, 0, 0])
 //     pico_sensor_enclosure(show_components = false);
