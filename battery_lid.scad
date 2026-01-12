@@ -6,9 +6,9 @@ include <battery_dims.scad>
 lid_thickness = 3;
 
 module battery_lid(
-  wall_thickness = def_wall_thickness,
-  clearance = def_clearance,
-  base_thickness = def_base_thickness,
+  wall_thickness = bat_def_wall_thickness,
+  clearance = bat_def_clearance,
+  base_thickness = bat_def_base_thickness,
 
   screw_tab_width = 8,
   screw_tab_height = 3,

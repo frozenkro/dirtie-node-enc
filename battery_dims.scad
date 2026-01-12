@@ -15,27 +15,37 @@ chg_hole_diameter = 2.2;
 
 usb_opening_length = 12;
 
-// default args
-def_wall_thickness = 2;
-def_clearance = 0.5;
-def_base_thickness = 2;
+// Wiring hole (matching pico sensor for alignment)
+bat_wiring_hole_width = 10;
+bat_wiring_hole_length = 10;
+bat_wiring_clearance_from_battery = 2;
+bat_h_wiring_hole_height = 5;
+
+// Battery default args
+bat_def_wall_thickness = 2;
+bat_def_clearance = 0.5;
+bat_def_base_thickness = 2;
 
 // boop
 boop = 0.01;
 
 // Function to get enclosure dimensions
 function battery_enclosure_dims(
-    wall_thickness = def_wall_thickness,
-    base_thickness = def_base_thickness,
-    clearance = def_clearance
+    wall_thickness = bat_def_wall_thickness,
+    base_thickness = bat_def_base_thickness,
+    clearance = bat_def_clearance
 ) = [
     bat_length + (2*clearance) + (2*wall_thickness),
     bat_width_wires + (2*clearance) + (2*wall_thickness),
     base_thickness + bat_height + chg_height_bat + 2
 ];
 
-function get_battery_z(base_thickness = def_base_thickness) = 
+function get_battery_z(base_thickness = bat_def_base_thickness) = 
     base_thickness + chg_height_bat + 1;
 
-function get_inner_width(clearance = def_clearance) = 
+function get_inner_width(clearance = bat_def_clearance) = 
     bat_width_wires + (2*clearance);
+
+function get_wiring_hole_depth(base_thickness = bat_def_base_thickness) = 
+    get_battery_z(base_thickness) - bat_wiring_clearance_from_battery;
+
