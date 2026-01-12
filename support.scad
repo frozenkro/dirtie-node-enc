@@ -22,7 +22,7 @@ module post_with_riser(post_height, post_diameter, riser_height, riser_diameter 
   }
 }
 
-module post_socket(height, post_diameter, thickness = 1, clearance = 0.4) {
+module post_socket(height, post_diameter, thickness = 1, clearance = 0.2) {
   difference() {
     cylinder(h = height, d = post_diameter + thickness, $fn = 32);
     translate([0, 0, -0.01])

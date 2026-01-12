@@ -24,6 +24,12 @@ module pico_sensor_enclosure(
     screw_insert_diameter = 4.5,
     screw_insert_depth = 4,
     screw_tab_edge_offset = 2,
+
+    // Screw Specs
+    screw_threading_diameter = 2.1,
+    screw_head_width = 5.2,
+    screw_head_height = 1.57,
+    screw_tab_height = 3,
     
     // Debug
     show_components = false
@@ -77,6 +83,13 @@ module pico_sensor_enclosure(
                 cube([ada_length_enclosed + 1, 
                       ada_width + clearance*2, 
                       ada_cavity_depth + clearance]);
+            // Sensor conn cavity
+            translate([ps_wiring_hole_x + ps_wiring_hole_length - boop,
+                       enc_dims[1]/2 - ada_conn_width/2 - clearance,
+                       base_thickness])
+                cube([ada_cavity_x - (ps_wiring_hole_x + ps_wiring_hole_length) + (2*boop),
+                      ada_conn_width + (2*clearance),
+                      pico_cavity_z - base_thickness + boop]);
 
             // wiring hole
             translate([ps_wiring_hole_x,
@@ -145,6 +158,23 @@ module pico_sensor_enclosure(
 
         translate([enc_dims[0] - screw_insert_tab_width/2 - screw_tab_edge_offset, enc_dims[1] + screw_insert_tab_width/2, enc_dims[2] - (screw_insert_depth + 1)])
         screw_insert_tab(screw_insert_diameter, screw_insert_tab_width, screw_insert_depth + 1);
+
+        // Screw head tabs for connection to battery enc
+        translate([enc_dims[0]/2, enc_dims[1] + screw_insert_tab_width/2, 0])
+        screw_tab(
+          screw_insert_tab_width, 
+          screw_tab_height, 
+          screw_threading_diameter,
+          screw_head_height,
+          screw_head_width);
+        translate([enc_dims[0]/2, -screw_insert_tab_width/2, 0])
+        rotate(180)
+        screw_tab(
+          screw_insert_tab_width, 
+          screw_tab_height, 
+          screw_threading_diameter,
+          screw_head_height,
+          screw_head_width);
     }
     
     // Debug: Show component outlines

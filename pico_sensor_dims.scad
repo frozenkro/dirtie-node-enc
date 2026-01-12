@@ -5,8 +5,9 @@ pico_thickness = 1;
 pico_hole_offset_chg = 2;
 pico_hole_offset_w = 4.7;
 pico_hole_diameter = 2.1;
-pico_cavity_height = 7.5;
 pico_base_clearance = 2;
+pico_height_chg = 3.65;
+pico_cavity_height = pico_base_clearance + pico_height_chg + 0.5;
 
 // Adafruit sensor dimensions
 ada_hole_diameter = 3.1;
@@ -16,9 +17,12 @@ ada_hole_offset_l_sens = 3.175;
 ada_length_enclosed = 30;
 ada_length_full = 76.2;
 ada_length = 101.6;
-ada_height = 1.5;
+ada_height = 1.65;
 ada_width = 14.3;
-ada_vert_clearance = 1.5;
+ada_conn_height = 7.2;
+//ada_vert_clearance = 1.5;
+ada_vert_clearance = ada_conn_height - ada_height - pico_base_clearance + 0.25;
+ada_conn_width = 8.65;
 
 // Wiring hole
 ps_wiring_hole_width = 10;

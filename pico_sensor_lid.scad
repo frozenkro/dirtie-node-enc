@@ -84,7 +84,7 @@ function get_sensor_tooth_height(
     enclosure_height,
     base_thickness,
     clearance,
-) = enclosure_height - base_thickness - ada_height - clearance;
+) = enclosure_height - base_thickness - ada_height;
 
 function get_sensor_tooth_length(
     enclosure_length,
@@ -97,3 +97,7 @@ function get_pico_post_socket_height(
     enclosure_height,
     base_thickness
 ) = enclosure_height - (get_pico_z(base_thickness)) - pico_thickness - 0.1;
+
+translate([0,0,lid_thickness])
+mirror([0,0,1]) 
+  pico_sensor_lid();
